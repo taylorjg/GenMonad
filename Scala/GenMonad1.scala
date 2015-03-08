@@ -6,6 +6,6 @@ object GenMonad1 {
 			s <- alphaStr suchThat { !_.isEmpty }
 			c <- oneOf(s)
 		} yield (s, c)
-		for (_ <- 1 to 10) g.sample.map(println _)
+		for { _ <- 1 to 10 } g.sample.map(println)
 	}
 }
