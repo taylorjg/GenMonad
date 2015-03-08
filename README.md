@@ -1,5 +1,7 @@
 
-## C&#23;
+## C# Examples
+
+### Query expression
  
 ```C#
 using System;
@@ -24,6 +26,8 @@ namespace GenMonad1
 }
 ```
 
+### Direct calls to GeneratorExtensions.SelectMany and GeneratorExtensions.Select 
+
 ```C#
 using System;
 using FsCheck;
@@ -46,6 +50,8 @@ namespace GenMonad2
     }
 }
 ```
+
+### Direct calls to GenBuilder.gen.Bind and GenBuilder.gen.Return 
 
 ```C#
 using System;
@@ -76,7 +82,9 @@ namespace GenMonad3
 }
 ```
 
-## F&#23;
+## F# Examples
+
+### Computation expression
 
 ```F#
 open FsCheck
@@ -94,7 +102,9 @@ let main _ =
     0
 ```
 
-## Scala
+## Scala Examples
+
+### For expression
 
 ```Scala
 import org.scalacheck.Gen._
@@ -110,6 +120,8 @@ object GenMonad1 {
 }
 ```
 
+### Direct calls to Gen.flatMap and Gen.map
+
 ```Scala
 import org.scalacheck.Gen._
 
@@ -123,7 +135,9 @@ object GenMonad2 {
 }
 ```
 
-## Haskell
+## Haskell Examples
+
+### Do notation
 
 ```Haskell
 import Test.QuickCheck
@@ -138,6 +152,7 @@ main =
 		sample g
 ```
 
+### Direct calls to >>= and return
 ```Haskell
 import Test.QuickCheck
 
