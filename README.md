@@ -1,5 +1,5 @@
 
-## C# Examples
+## C# / FsCheck
 
 ### Query expression
  
@@ -15,12 +15,13 @@ namespace GenMonad1
     {
         private static void Main()
         {
-            var g1 =
+            var g =
                 from s in Arb.generate<string>()
                 where !string.IsNullOrEmpty(s)
                 from c in Gen.elements(s)
                 select Tuple.Create(s, c);
-            foreach (var sample in Gen.sample(10, 10, g1)) Console.WriteLine(sample);
+
+            foreach (var sample in Gen.sample(10, 10, g)) Console.WriteLine(sample);
         }
     }
 }
@@ -82,7 +83,7 @@ namespace GenMonad3
 }
 ```
 
-## F# Examples
+## F# / FsCheck
 
 ### Computation expression
 
@@ -102,7 +103,7 @@ let main _ =
     0
 ```
 
-## Scala Examples
+## Scala / ScalaCheck
 
 ### For expression
 
@@ -135,7 +136,7 @@ object GenMonad2 {
 }
 ```
 
-## Haskell Examples
+## Haskell / QuickCheck
 
 ### Do notation
 
