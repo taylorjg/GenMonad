@@ -1,8 +1,35 @@
 
+## Introduction
+
+This repo contains simple examples of using the Gen monad in a few different property-based testing tool implementations:  
+
+* [FsCheck](https://github.com/fsharp/FsCheck)
+    * Gen&lt;T&gt; (C#)
+    * Gen&lt;'a&gt; (F#)
+* [ScalaCheck](http://scalacheck.org/)
+    * Gen[+T] (Scala)
+* [QuickCheck](https://hackage.haskell.org/package/QuickCheck) 
+    * Gen a (Haskell)
+
+
 ## C# / FsCheck
 
-### Query expression
+### Query expressions
+
+Class <code>FsCheck.Fluent.GeneratorExtensions</code> contains the following extension methods that allow the <code>Gen&lt;T&gt;</code> type to be used in C# Query Expressions:
  
+```C#
+public static FsCheck.Gen<b> SelectMany<a, b>(this FsCheck.Gen<a> source, System.Func<a,Gen<b>> f)
+public static FsCheck.Gen<b> Select<a, b>(this FsCheck.Gen<a> g, System.Func<a,b> selector)
+public static FsCheck.Gen<a> Where<a>(this FsCheck.Gen<a> g, System.Func<a,bool> predicate)
+```
+
+References:
+
+* [Monadic comprehension syntax in C# (SO)](http://stackoverflow.com/questions/19709899/monadic-comprehension-syntax-in-c-sharp)
+* [C# Language Specification](http://www.microsoft.com/en-us/download/details.aspx?id=7029)
+
+
 ```C#
 using System;
 using System.Linq;
@@ -27,7 +54,10 @@ namespace GenMonad1
 }
 ```
 
-### Direct calls to GeneratorExtensions.SelectMany and GeneratorExtensions.Select 
+### Direct calls to methods in FsCheck.Fluent.GeneratorExtensions 
+
+It is also possible to call <code>FsCheck.Fluent.GeneratorExtensions</code>'s <code>SelectMany</code>, <code>Select</code>
+and <code>Where</code> directly instead of using query expressions.
 
 ```C#
 using System;
@@ -52,7 +82,10 @@ namespace GenMonad2
 }
 ```
 
-### Direct calls to GenBuilder.gen.Bind and GenBuilder.gen.Return 
+### Direct calls to GenBuilder.gen methods from C# too
+
+It is even possible to call FsCheck's <code>gen</code> methods directly from C# too. <code>gen</code> is a singleton instance of
+<code>GenBuilder</code> intended for use with F#'s computation expressions.  
 
 ```C#
 using System;
@@ -83,10 +116,29 @@ namespace GenMonad3
 }
 ```
 
+
 ## F# / FsCheck
 
-### Computation expression
+### Computation expressions
 
+As mentioned above, FsCheck's <code>gen</code> is a singleton instance of <code>GenBuilder</code> intended for use with F#'s computation expressions.
+Effectively, <code>let!</code> expressions are translated into calls to <code>gen.Bind</code> and <code>return</code> expressions are translated
+into calls to <code>gen.Return</code>.   
+
+```F#
+> FsCheck.GenBuilder.gen.Bind;;
+val it : (Gen<'a> * ('a -> Gen<'b>) -> Gen<'b>) = ...
+> FsCheck.GenBuilder.gen.Return;;
+val it : ('a -> Gen<'a>) = ...
+```
+
+Note the similarity between the <code>FsCheck.GenBuilder.gen.Bind</code> and <code>FsCheck.Fluent.GeneratorExtensions.SelectMany</code> signatures.
+
+References:
+
+* [Syntax Matters: Writing abstract computations in F#](http://tomasp.net/academic/papers/computation-zoo/syntax-matters.pdf)
+
+   
 ```F#
 open FsCheck
 open Gen
@@ -105,7 +157,22 @@ let main _ =
 
 ## Scala / ScalaCheck
 
-### For expression
+In ScalaCheck, the <code>Gen[+T]</code> trait has <code>flatMap</code> and <code>map</code> methods.
+Scala's <code>for</code> expressions are translated into calls to <code>flatMap</code> and <code>map</code>.
+
+```Scala
+sealed trait Gen[+T] {
+  def flatMap[U](f: T => Gen[U]): Gen[U]
+  def map[U](f: T => U): Gen[U]
+}
+```
+
+References:
+
+* [How does yield work?](http://docs.scala-lang.org/tutorials/FAQ/yield.html)
+
+
+### For expressions
 
 ```Scala
 import org.scalacheck.Gen._
@@ -138,6 +205,23 @@ object GenMonad2 {
 
 ## Haskell / QuickCheck
 
+In QuickCheck, Gen is an instance of the Monad type class.
+
+```Haskell
+ghci> :info Test.QuickCheck.Gen
+...
+instance Monad Gen -- Defined in `Test.QuickCheck.Gen'
+...
+ghci> :info Monad
+class Monad (m :: * -> *) where
+  (>>=) :: m a -> (a -> m b) -> m b
+  ...
+  return :: a -> m a
+  ...
+```
+
+Haskell's <code>do</code> notation is translated into calls to bind (<code>&gt;&gt;=</code>) and <code>return</code>.
+
 ### Do notation
 
 ```Haskell
@@ -154,6 +238,7 @@ main =
 ```
 
 ### Direct calls to >>= and return
+
 ```Haskell
 import Test.QuickCheck
 
