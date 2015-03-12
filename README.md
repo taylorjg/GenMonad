@@ -7,7 +7,7 @@ This repo contains simple examples of using the Gen monad in a few different pro
     * Gen&lt;T&gt; (C#)
     * Gen&lt;'a&gt; (F#)
 * [ScalaCheck](http://scalacheck.org/)
-    * Gen[+T] (Scala)
+    * Gen&#91;+T&#93; (Scala)
 * [QuickCheck](https://hackage.haskell.org/package/QuickCheck) 
     * Gen a (Haskell)
 
@@ -57,7 +57,7 @@ namespace GenMonad1
 ### Direct calls to methods in FsCheck.Fluent.GeneratorExtensions 
 
 It is also possible to call <code>FsCheck.Fluent.GeneratorExtensions</code>'s <code>SelectMany</code>, <code>Select</code>
-and <code>Where</code> directly instead of using query expressions.
+and <code>Where</code> methods directly instead of using query expressions.
 
 ```C#
 using System;
@@ -84,8 +84,8 @@ namespace GenMonad2
 
 ### Direct calls to GenBuilder.gen methods from C# too
 
-It is even possible to call FsCheck's <code>gen</code> methods directly from C# too. <code>gen</code> is a singleton instance of
-<code>GenBuilder</code> intended for use with F#'s computation expressions.  
+It is even possible to directly call methods on FsCheck's <code>gen</code> object from C# too.
+<code>gen</code> is a singleton instance of <code>GenBuilder</code> intended for use with F#'s computation expressions.  
 
 ```C#
 using System;
@@ -121,9 +121,11 @@ namespace GenMonad3
 
 ### Computation expressions
 
-As mentioned above, FsCheck's <code>gen</code> is a singleton instance of <code>GenBuilder</code> intended for use with F#'s computation expressions.
+As mentioned above, FsCheck's <code>gen</code> object is a singleton instance of <code>GenBuilder</code> intended for use with F#'s computation expressions.
 Effectively, <code>let!</code> expressions are translated into calls to <code>gen.Bind</code> and <code>return</code> expressions are translated
-into calls to <code>gen.Return</code>.   
+into calls to <code>gen.Return</code>.
+
+Here we examine the types of <code>gen.Bind</code> and <code>gen.Return</code> in F# Interactive:    
 
 ```F#
 > FsCheck.GenBuilder.gen.Bind;;
@@ -132,7 +134,7 @@ val it : (Gen<'a> * ('a -> Gen<'b>) -> Gen<'b>) = ...
 val it : ('a -> Gen<'a>) = ...
 ```
 
-Note the similarity between the <code>FsCheck.GenBuilder.gen.Bind</code> and <code>FsCheck.Fluent.GeneratorExtensions.SelectMany</code> signatures.
+Note how similar the signature of <code>FsCheck.GenBuilder.gen.Bind</code> is to the signature of <code>FsCheck.Fluent.GeneratorExtensions.SelectMany</code>.
 
 References:
 
@@ -188,7 +190,7 @@ object GenMonad1 {
 }
 ```
 
-### Direct calls to Gen.flatMap and Gen.map
+### Direct calls to flatMap and map
 
 ```Scala
 import org.scalacheck.Gen._
