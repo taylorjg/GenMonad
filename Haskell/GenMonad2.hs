@@ -4,6 +4,5 @@ main :: IO ()
 main =
 	do
 		let g = (arbitrary :: Gen String) `suchThat` (not . null) >>= \s ->
-			elements s >>= \c ->
-				return (s, c)
+			(\c -> (s, c)) `fmap` (elements s)
 		sample g
