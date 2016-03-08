@@ -5,7 +5,7 @@ using Microsoft.FSharp.Core;
 
 namespace GenMonad3
 {
-    internal class Program
+    internal static class Program
     {
         private static void Main()
         {
