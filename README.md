@@ -19,7 +19,7 @@ Here is a screenshot of the Haskell version of the code using do notation:
 
 ![Screenshot](https://raw.github.com/taylorjg/GenMonad/master/Images/Haskell_GenMonad1_Screenshot.png)
 
-## C# / FsCheck
+## C# / FsCheck 1.x
 
 ### Query expressions
 
@@ -88,39 +88,9 @@ namespace GenMonad2
 }
 ```
 
-### Direct calls to GenBuilder.gen methods from C# too
+## C# / FsCheck 2.x
 
-It is even possible to directly call methods on FsCheck's <code>gen</code> object from C# too.
-<code>gen</code> is a singleton instance of <code>GenBuilder</code> intended for use with F#'s computation expressions.  
-
-```C#
-using System;
-using FsCheck;
-using FsCheck.Fluent;
-using Microsoft.FSharp.Core;
-
-namespace GenMonad3
-{
-    internal class Program
-    {
-        private static void Main()
-        {
-            var gen = GenBuilder.gen;
-
-            var g =
-                gen.Bind(
-                    Any.OfType<string>().Where(s => !string.IsNullOrEmpty(s)),
-                    FSharpFunc<string, Gen<Tuple<string, char>>>.FromConverter(s =>
-                        gen.Bind(
-                            Gen.elements(s),
-                            FSharpFunc<char, Gen<Tuple<string, char>>>.FromConverter(c =>
-                                gen.Return(Tuple.Create(s, c))))));
-
-            foreach (var sample in Gen.sample(10, 10, g)) Console.WriteLine(sample);
-        }
-    }
-}
-```
+**_TODO!_**
 
 ## F# / FsCheck
 
