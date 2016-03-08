@@ -1,7 +1,7 @@
 
 ## Introduction
 
-This repo contains simple examples of using the Gen monad in a few different property-based testing tool implementations:  
+This repo contains a simple example of using the Gen monad in a few different property-based testing tool implementations:  
 
 * [FsCheck](https://github.com/fsharp/FsCheck)
     * Gen&lt;T&gt; (C#)
@@ -11,6 +11,13 @@ This repo contains simple examples of using the Gen monad in a few different pro
 * [QuickCheck](https://hackage.haskell.org/package/QuickCheck)
     * Gen a (Haskell)
 
+The example involves a generator of a tuple where the first item is a string and the second item is a character from within the string.
+
+## Screenshot
+
+Here is a screenshot of the Haskell version of the code using do notation:
+
+![Screenshot](https://raw.github.com/taylorjg/GenMonad/master/Images/Haskell_GenMonad1_Screenshot.png)
 
 ## C# / FsCheck
 
@@ -19,8 +26,8 @@ This repo contains simple examples of using the Gen monad in a few different pro
 Class <code>FsCheck.Fluent.GeneratorExtensions</code> contains the following extension methods that allow the <code>Gen&lt;T&gt;</code> type to be used in C# Query Expressions:
 
 ```C#
-public static FsCheck.Gen<b> SelectMany<a, b>(this FsCheck.Gen<a> source, System.Func<a,Gen<b>> f)
 public static FsCheck.Gen<b> Select<a, b>(this FsCheck.Gen<a> g, System.Func<a,b> selector)
+public static FsCheck.Gen<b> SelectMany<a, b>(this FsCheck.Gen<a> source, System.Func<a,Gen<b>> f)
 public static FsCheck.Gen<a> Where<a>(this FsCheck.Gen<a> g, System.Func<a,bool> predicate)
 ```
 
@@ -28,7 +35,6 @@ References:
 
 * [Monadic comprehension syntax in C# (SO)](http://stackoverflow.com/questions/19709899/monadic-comprehension-syntax-in-c-sharp)
 * [C# Language Specification](http://www.microsoft.com/en-us/download/details.aspx?id=7029)
-
 
 ```C#
 using System;
@@ -116,7 +122,6 @@ namespace GenMonad3
 }
 ```
 
-
 ## F# / FsCheck
 
 ### Computation expressions
@@ -139,7 +144,6 @@ Note how similar the signature of <code>FsCheck.GenBuilder.gen.Bind</code> is to
 References:
 
 * [Syntax Matters: Writing abstract computations in F#](http://tomasp.net/academic/papers/computation-zoo/syntax-matters.pdf)
-
 
 ```F#
 open FsCheck
@@ -172,7 +176,6 @@ sealed trait Gen[+T] {
 References:
 
 * [How does yield work?](http://docs.scala-lang.org/tutorials/FAQ/yield.html)
-
 
 ### For expressions
 
