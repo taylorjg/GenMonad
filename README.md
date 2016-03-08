@@ -8,7 +8,7 @@ This repo contains simple examples of using the Gen monad in a few different pro
     * Gen&lt;'a&gt; (F#)
 * [ScalaCheck](http://scalacheck.org/)
     * Gen&#91;+T&#93; (Scala)
-* [QuickCheck](https://hackage.haskell.org/package/QuickCheck) 
+* [QuickCheck](https://hackage.haskell.org/package/QuickCheck)
     * Gen a (Haskell)
 
 
@@ -17,7 +17,7 @@ This repo contains simple examples of using the Gen monad in a few different pro
 ### Query expressions
 
 Class <code>FsCheck.Fluent.GeneratorExtensions</code> contains the following extension methods that allow the <code>Gen&lt;T&gt;</code> type to be used in C# Query Expressions:
- 
+
 ```C#
 public static FsCheck.Gen<b> SelectMany<a, b>(this FsCheck.Gen<a> source, System.Func<a,Gen<b>> f)
 public static FsCheck.Gen<b> Select<a, b>(this FsCheck.Gen<a> g, System.Func<a,b> selector)
@@ -54,7 +54,7 @@ namespace GenMonad1
 }
 ```
 
-### Direct calls to methods in FsCheck.Fluent.GeneratorExtensions 
+### Direct calls to methods in FsCheck.Fluent.GeneratorExtensions
 
 It is also possible to call <code>FsCheck.Fluent.GeneratorExtensions</code>'s <code>SelectMany</code>, <code>Select</code>
 and <code>Where</code> methods directly instead of using query expressions.
@@ -140,14 +140,14 @@ References:
 
 * [Syntax Matters: Writing abstract computations in F#](http://tomasp.net/academic/papers/computation-zoo/syntax-matters.pdf)
 
-   
+
 ```F#
 open FsCheck
 open Gen
 open System
 
 [<EntryPoint>]
-let main _ = 
+let main _ =
     let g = gen {
         let! s = Arb.generate<string> |> suchThat (String.IsNullOrEmpty >> not)
         let! c = elements s
@@ -239,16 +239,15 @@ main =
 		sample g
 ```
 
-### Direct calls to >>= and return
+### Direct calls to >>= and fmap
 
 ```Haskell
 import Test.QuickCheck
 
 main :: IO ()
 main =
-	do
-		let g = (arbitrary :: Gen String) `suchThat` (not . null) >>= \s ->
-			elements s >>= \c ->
-				return (s, c)
-		sample g
+    do
+        let g = (arbitrary :: Gen String) `suchThat` (not . null) >>= \s ->
+            (\c -> (s, c)) `fmap` (elements s)
+        sample g
 ```
