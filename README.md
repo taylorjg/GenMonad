@@ -90,9 +90,7 @@ namespace GenMonad2
 
 ## C# / FsCheck 2.x
 
-**_TODO!_**
-
-## F# / FsCheck
+The section shows the C# code that was has been updated to work with FsCheck 2.x.
 
 ### Query expressions
 
@@ -141,6 +139,8 @@ namespace GenMonad5
     }
 }
 ```
+
+## F# / FsCheck
 
 ### Computation expressions
 
