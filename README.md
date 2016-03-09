@@ -90,9 +90,11 @@ namespace GenMonad2
 
 ## C# / FsCheck 2.x
 
-The section shows the C# code that was has been updated to work with FsCheck 2.x.
+This section shows the C# code that was has been updated to work with FsCheck 2.x.
 
 ### Query expressions
+
+In FsCheck 2.x, the extension methods that allow the <code>Gen&lt;T&gt;</code> type to be used in C# Query Expressions were moved from `FsCheck.Fluent.GeneratorExtensions` to `FsCheck.GenExtensions`.
 
 ```C#
 using System;
@@ -118,6 +120,8 @@ namespace GenMonad4
 ```
 
 ### Direct calls to methods in FsCheck.GenExtensions
+
+In this example, I have used the 3 argument overload of `SelectMany` which simplifies the code a bit. This was also possible in FsCheck 1.x.
 
 ```C#
 using System;
@@ -157,7 +161,11 @@ val it : (Gen<'a> * ('a -> Gen<'b>) -> Gen<'b>) = ...
 val it : ('a -> Gen<'a>) = ...
 ```
 
-Note how similar the signature of <code>FsCheck.GenBuilder.gen.Bind</code> is to the signature of <code>FsCheck.Fluent.GeneratorExtensions.SelectMany</code>.
+Note how similar the signature of <code>FsCheck.GenBuilder.gen.Bind</code> is to the signature of `FsCheck.Fluent.GeneratorExtensions.SelectMany` (1.x) / `FsCheck.GenExtensions.SelectMany` (2.x):
+
+```C#
+public static FsCheck.Gen<b> SelectMany<a, b>(this FsCheck.Gen<a> source, System.Func<a,Gen<b>> f)
+```
 
 References:
 
@@ -174,6 +182,23 @@ let main _ =
         let! s = Arb.generate<string> |> suchThat (String.IsNullOrEmpty >> not)
         let! c = elements s
         return (s, c)
+    }
+    sample 50 10 g |> Seq.iter (printfn "%A")
+    0
+```
+
+This can also be done using `let!`/`map`/`return!` rather than `let!`/`let!`/`return`:
+
+```F#
+open FsCheck
+open Gen
+open System
+
+[<EntryPoint>]
+let main _ =
+    let g = gen {
+        let! s = Arb.generate<string> |> suchThat (String.IsNullOrEmpty >> not)
+        return! elements s |> map (fun c -> (s, c))
     }
     sample 50 10 g |> Seq.iter (printfn "%A")
     0
