@@ -94,6 +94,54 @@ namespace GenMonad2
 
 ## F# / FsCheck
 
+### Query expressions
+
+```C#
+using System;
+using System.Linq;
+using FsCheck;
+
+namespace GenMonad4
+{
+    internal static class Program
+    {
+        private static void Main()
+        {
+            var g =
+                from s in Arb.Generate<string>()
+                where !string.IsNullOrEmpty(s)
+                from c in Gen.Elements(s.AsEnumerable())
+                select Tuple.Create(s, c);
+
+            foreach (var sample in Gen.Sample(10, 10, g)) Console.WriteLine(sample);
+        }
+    }
+}
+```
+
+### Direct calls to methods in FsCheck.GenExtensions
+
+```C#
+using System;
+using FsCheck;
+
+namespace GenMonad5
+{
+    internal static class Program
+    {
+        private static void Main()
+        {
+            var g =
+                Arb.Generate<string>()
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .SelectMany(Gen.Elements, Tuple.Create);
+
+            foreach (var sample in Gen.Sample(10, 10, g)) Console.WriteLine(sample);
+        }
+    }
+}
+```
+
 ### Computation expressions
 
 As mentioned above, FsCheck's <code>gen</code> object is a singleton instance of <code>GenBuilder</code> intended for use with F#'s computation expressions.
